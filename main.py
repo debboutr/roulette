@@ -2,14 +2,41 @@ import click
 from table import Table
 
 
+def play_strategy3():
+    rolls = 0
+    walk = 1600
+    total = 1000
+    i = 0
+    amount = [2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+    while total < walk and total > 0:
+        rolls += 1
+        table = Table(f"TA:{amount[i]}|TB:{amount[i]}")
+        table.roll()
+        pay = table.payout()
+        if pay > 0:
+            i -= 1
+            i = 0 if i < 0 else i
+            total += pay
+            print(f"rolls: {rolls} || {total} || WIN!!")
+        if pay == 0:
+            i += 1
+            print(f"rolls: {rolls} || {total} || LOSE!!")
+    if total >= walk:
+        print(f"rolls: {rolls} || {total} || WIN!!")
+        return 1
+    if total < 30:
+        print(f"rolls: {rolls} || {total} || LOSE")
+        return 0
+
+
 def play_strategy():
     total = 120
     rolls = 0
     walk = 240
-    while total < walk and total >= 60:
+    while total < walk and total > 100:
         rolls += 1
         # print("spin")
-        table = Table("D0102:30|D0304:20|D0506:20|D0708:20|D0910:30")
+        table = Table("30:D:0102|20:D:0304|20:D:0506|20:D:0708|30:D:0910")
 
         # print(f"PLAY: {table.play}")
         # table.load("H:1000|L:1000|D0203:22|S01:33|TA:50|CB:50")
@@ -21,7 +48,7 @@ def play_strategy():
     if total >= walk:
         print(f"rolls: {rolls} || {total} || WIN!!")
         return 1
-    if total < 30:
+    if total < 100:
         print(f"rolls: {rolls} || {total} || LOSE")
         return 0
 
@@ -33,7 +60,7 @@ def play_strategy2():
     while total < 1150 and total >= 0:
         rolls += 1
         # print("spin")
-        table = Table(f"TA:{b}|TB:{b}")
+        table = Table(f"{b}:T:01|{b}:T:02")
 
         # print(f"PLAY: {table.play}")
         # table.load("H:1000|L:1000|D0203:22|S01:33|TA:50|CB:50")
@@ -41,7 +68,6 @@ def play_strategy2():
         # print(table.bets)
         table.roll()
         pay = table.payout()
-        # print(f"TOTAL: {pay}", f"{b}", f"{total}")
         if pay < 0:
             b += 10
         total += pay
@@ -50,20 +76,15 @@ def play_strategy2():
         # print(f"rolls: {rolls} || WIN!!")
         return 1
     if total <= 0:
+        print(f"TOTAL: {pay}", f"{rolls}", f"{total}")
         # print(f"rolls: {rolls} || LOSE")
         return 0
 
 
-# table.load("H:10|B:10|TB:10|CB:10")
 wins = []
-NO = 10_000
+NO = 100
 for n, _ in enumerate(range(NO)):
-    # print(f"GAME: {n}")
-    rr = play_strategy()
+    rr = play_strategy2()
     wins.append(rr)
-    # if rr:
-    # print("WIN!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    # else:
-    # print("LOSE!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 print("OUT:", sum(wins) / NO)
